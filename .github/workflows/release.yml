@@ -16,7 +16,7 @@ jobs:
     - name: download artifacts
       uses: actions/download-artifact@v4
       with:
-        name: lark.flatpak
+        pattern: lark-*.flatpak
     - uses: ncipollo/release-action@v1
       with:
-        artifacts: lark.flatpak
+        artifacts: lark-*.flatpak
