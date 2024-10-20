@@ -23,6 +23,7 @@ jobs:
           manifest-path: com.larksuite.Lark.yaml
           arch: ${{ matrix.arch }}
           upload-artifact: "false"
+          cache: "false"
       - name: ls
         run: ls -a
       # - uses: actions/upload-artifact@v4
