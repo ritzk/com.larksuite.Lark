@@ -23,7 +23,10 @@ jobs:
           manifest-path: com.larksuite.Lark.yaml
           arch: ${{ matrix.arch }}
           upload-artifact: "false"
-          cache: "false"
-      - uses: actions/upload-artifact@v4
-        with:
-          path: lark-${{ matrix.arch }}.flatpak
+      - name: ls
+        run: ls -a
+      # - uses: actions/upload-artifact@v4
+      #   with:
+      #     path: lark-${{ matrix.arch }}.flatpak
+
+  # down:
