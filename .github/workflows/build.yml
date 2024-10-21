@@ -17,13 +17,17 @@ jobs:
         arch: [x86_64, aarch64]
     steps:
       - uses: actions/checkout@v4
-      - uses: flatpak/flatpak-github-actions/flatpak-builder@v6
+      - uses: flatpak/flatpak-github-actions/flatpak-builder@v6.3
         with:
           bundle: lark-${{ matrix.arch }}.flatpak
           manifest-path: com.larksuite.Lark.yaml
           arch: ${{ matrix.arch }}
           upload-artifact: "false"
           cache: "false"
-      - uses: actions/upload-artifact@v4
-        with:
-          path: lark-${{ matrix.arch }}.flatpak
+      - name: ls
+        run: ls -a
+      # - uses: actions/upload-artifact@v4
+      #   with:
+      #     path: lark-${{ matrix.arch }}.flatpak
+
+  # down:
