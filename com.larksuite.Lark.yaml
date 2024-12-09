@@ -1,0 +1,65 @@
+app-id: com.larksuite.Lark
+runtime: org.freedesktop.Platform
+runtime-version: '24.08'
+sdk: org.freedesktop.Sdk
+base: org.electronjs.Electron2.BaseApp
+base-version: '24.08'
+command: lark
+finish-args:
+  - --share=network
+  - --share=ipc
+  - --socket=x11
+  - --socket=pulseaudio
+  # For camera.
+  - --device=all
+  - --talk-name=org.freedesktop.secrets
+  - --talk-name=org.gnome.keyring
+  - --talk-name=org.gnome.ScreenSaver
+  # Share files.
+  # - --filesystem=home
+separate-locales: false
+
+modules:
+  - name: lark
+    buildsystem: simple
+    build-commands:
+      - install -Dm755 apply_extra ${FLATPAK_DEST}/bin/apply_extra    
+      - install -Dm755 lark ${FLATPAK_DEST}/bin/lark
+      - install -D -t /app/lib/ /usr/lib/*-linux-gnu/{libbfd-*.so,libsframe.so.1}
+      - install -D -t /app/bin/ /usr/bin/ar
+      - install -D -t /app/share/icons/hicolor/scalable/apps/ com.larksuite.Lark.svg
+      - install -D -t /app/share/applications/ com.larksuite.Lark.desktop
+      - install -D -t /app/share/metainfo/ com.larksuite.Lark.metainfo.xml
+    sources:
+      - type: script
+        dest-filename: apply_extra
+        commands:
+          - ar x lark.deb
+          - tar -xf data.tar.xz
+          - mv opt/bytedance/lark .
+          - sed -i '/^exec/d' lark/bytedance-lark
+          - rm -rf opt usr *.tar.* debian-binary *.deb
+      - type: extra-data
+        filename: lark.deb
+        only-arches: ["x86_64"]
+        url: https://sf16-va.larksuitecdn.com/obj/lark-artifact-storage/1d51a0a0/Lark-linux_x64-7.28.10.deb
+        sha256: d35d5fd55654aee2becc12d3b464e5e10103620589cb6cf61925b0b167aaf07b
+        size: 380671576
+      - type: extra-data
+        filename: lark.deb
+        only-arches: ["aarch64"]
+        url: https://sf16-va.larksuitecdn.com/obj/lark-artifact-storage/fd260437/Lark-linux_arm64-7.28.10.deb
+        sha256: ad57d0455a87dd3ed584a731faa1430c8c396930ae4c8c00e2ec7de8a3a89883
+        size: 348363856
+      - type: script
+        commands:
+          - export TMPDIR="$XDG_RUNTIME_DIR/app/$FLATPAK_ID"
+          - source /app/extra/lark/bytedance-lark
+          - exec zypak-wrapper /app/extra/lark/lark "$@"
+        dest-filename: lark
+      - type: file
+        path: com.larksuite.Lark.desktop
+      - type: file
+        path: com.larksuite.Lark.metainfo.xml
+      - type: file
+        path: com.larksuite.Lark.svg
